@@ -5,7 +5,14 @@ import os
 import matplotlib.pyplot as plot
 import numpy as np
 
+# To-do
+# - Animated waveform
+# - partial waveform, fft, spectrogram
+# - support stereo (or manipulate to support)
+# - add more flexibility to functions
+# - display (plot) in different shapes - not only wave (bar graph?)
 
+# show waveform of entire clip
 def plotclip_all(filename):
     wf = wave.open(filename, 'rb')
     sample_channel = wf.getnchannels()
@@ -23,6 +30,7 @@ def plotclip_all(filename):
     plot.plot(time,wf_raw, color = "blue")
     plot.show()
 
+# show spectrogram of entire clip
 def spectrogram_all(filename):
     wf = wave.open(filename, 'rb')
     sample_channel = wf.getnchannels()
@@ -40,6 +48,7 @@ def spectrogram_all(filename):
     plot.colorbar()
     plot.show()
 
+# show fft of entire clip
 def plotclip_all_fft(filename):
     wf = wave.open(filename, 'rb')
     sample_channel = wf.getnchannels()
@@ -61,3 +70,5 @@ def plotclip_all_fft(filename):
 
     plot.plot(freq,fft_spectrum_abs, color = "blue")
     plot.show()
+
+# animate clip waveform?
