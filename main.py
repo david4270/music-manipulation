@@ -7,7 +7,8 @@ import numpy as np
 
 
 def main():
-    wf = wave.open('example.wav', 'rb')
+    filename = 'assets/example.wav'
+    wf = wave.open(filename, 'rb')
     
 
     sample_width = wf.getsampwidth()
@@ -28,7 +29,7 @@ def main():
 
     
     
-    wf = wave.open('example.wav', 'rb')
+    wf = wave.open(filename, 'rb')
     p = pyaudio.PyAudio()
     
     frame_rate = int(sample_rate/30) #735
