@@ -1,37 +1,33 @@
 import pyaudio
 import wave
 import sys
+import os
 import matplotlib.pyplot as plot
 import numpy as np
 
+import src.listenclip as listenclip
+import src.plotclip as plotclip
 
 
 def main():
-    filename = 'assets/example.wav'
-    wf = wave.open(filename, 'rb')
-    
+    filename = 'example.wav'
+    foldername = os.path.join(os.getcwd(),'assets')
+    filename = os.path.join(foldername,filename)
 
-    sample_width = wf.getsampwidth()
-    sample_channel = wf.getnchannels()
-    sample_rate = wf.getframerate()
-    
-    wf_raw = wf.readframes(-1)
-    wf_raw = np.frombuffer(wf_raw, "int16")
-    #print(sample_rate/30)
+    plotclip.plotclip_all(filename)
+    plotclip.plotclip_all_fft(filename)
+    plotclip.spectrogram_all(filename)
 
-    if sample_channel == 2:
-        print("Stereo not supported")
-        return
+    listenclip.listen2Music(filename)
 
-    time = np.linspace(0,len(wf_raw)/sample_rate, num = len(wf_raw))
-    plot.plot(time,wf_raw, color = "blue")
-    plot.show()
-
-    
+    """
     
     wf = wave.open(filename, 'rb')
     p = pyaudio.PyAudio()
-    
+
+    sample_width = wf.getsampwidth()
+    sample_channel = wf.getnchannels()
+    sample_rate = wf.getframerate()    
     frame_rate = int(sample_rate/30) #735
 
     print(sample_width, sample_channel, sample_rate, frame_rate)
@@ -63,6 +59,7 @@ def main():
     
     stream.close()
     p.terminate()
+    """
 
 
 if __name__ == '__main__':
