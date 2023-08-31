@@ -8,9 +8,13 @@ import numpy as np
 import src.listenclip as listenclip
 import src.plotclip as plotclip
 
+# Example wav from: https://www2.cs.uic.edu/~i101/SoundFiles/
+
+# real-time music manipulation? or sound analysis (guitar tuner?)
+# two different projects?
 
 def main():
-    filename = 'example.wav'
+    filename = 'example2.wav'
     foldername = os.path.join(os.getcwd(),'assets')
     filename = os.path.join(foldername,filename)
 

@@ -3,6 +3,7 @@ import wave
 import sys
 import os
 import matplotlib.pyplot as plot
+import matplotlib.animation as animation
 import numpy as np
 
 # To-do
@@ -72,3 +73,9 @@ def plotclip_all_fft(filename):
     plot.show()
 
 # animate clip waveform?
+def plotclip_animated_test(filename):
+    wf = wave.open(filename, 'rb')
+    sample_channel = wf.getnchannels()
+    sample_rate = wf.getframerate()
+
+    
