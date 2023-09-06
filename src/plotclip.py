@@ -16,6 +16,8 @@ import numpy as np
 # show waveform of entire clip
 def plotclip_all(filename):
     wf = wave.open(filename, 'rb')
+
+    num_frames = wf.getnframes()
     sample_channel = wf.getnchannels()
     sample_rate = wf.getframerate()
     
@@ -34,6 +36,8 @@ def plotclip_all(filename):
 # show spectrogram of entire clip
 def spectrogram_all(filename):
     wf = wave.open(filename, 'rb')
+
+    num_frames = wf.getnframes()
     sample_channel = wf.getnchannels()
     sample_rate = wf.getframerate()
     
@@ -51,7 +55,9 @@ def spectrogram_all(filename):
 
 # show fft of entire clip
 def plotclip_all_fft(filename):
+
     wf = wave.open(filename, 'rb')
+    num_frames = wf.getnframes()
     sample_channel = wf.getnchannels()
     sample_rate = wf.getframerate()
     
@@ -79,12 +85,16 @@ def plotclip_all_fft(filename):
     plot.show()
 
 # animate clip waveform?
-def plotclip_animated_test(filename):
+def plotclip_animated(filename):
     wf = wave.open(filename, 'rb')
     
+    num_frames = wf.getnframes()
     sample_channel = wf.getnchannels()
     sample_rate = wf.getframerate()
-    sample_size = int(sample_rate/30)
+    frames_per_second = 30
+    sample_size = int(sample_rate/frames_per_second)
+
+    #print(num_frames, sample_rate)
 
     fig = plot.figure()
     ax = plot.axes(xlim = (0, sample_size), ylim = (-2**15,2**15))
@@ -97,11 +107,6 @@ def plotclip_animated_test(filename):
     def animate(i):
         x = np.linspace(0, sample_size-1, sample_size)
         wf_raw = wf.readframes(sample_size)
-        """
-        if len(wf_raw) == 0:
-            line.set_data(x,np.empty(len(x)))
-            return line,
-        """
         #print(i)
         y = np.frombuffer(wf_raw, "int16")
         #print(y)
@@ -109,35 +114,9 @@ def plotclip_animated_test(filename):
         
         return line,
 
-    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=1800, interval=1000/30, repeat = False, blit=True)
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=int(num_frames/sample_size), interval=1000/frames_per_second, repeat = False, blit=True)
 
-    """
-    fig, ax = plot.subplots()
-
-    x = np.linspace(0, sample_size-1, sample_size)
-    line, = ax.plot(x, np.random.rand(sample_size))
-    ax.set_ylim(-2**15,2**15)
-    ax.set_xlim(0, sample_size)
-    
-    wf_raw = wf.readframes(sample_size)
-    
-    while wf_raw != b'':
-
-        wf_raw = np.frombuffer(wf_raw, "int16")
-        
-        #wf_raw = np.frombuffer(wf_raw, "int16")
-        #print(wf_raw)
-        #wf_raw = [i for i in wf_raw]
-        #wf_raw = np.array(wf_raw)
-        #print(wf_raw)
-        #print(len(wf_raw))
-        line.set_ydata(wf_raw)
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-
-        wf_raw = wf.readframes(sample_size)
-    """
-    #plot.show()
+    plot.show()
         
 
     

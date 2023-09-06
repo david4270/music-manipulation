@@ -23,7 +23,7 @@ def main():
     plotclip.plotclip_all(filename)
     plotclip.plotclip_all_fft(filename)
     plotclip.spectrogram_all(filename)
-    plotclip.plotclip_animated_test(filename)
+    plotclip.plotclip_animated(filename)
 
     #listenclip.listen2Music(filename)
 
