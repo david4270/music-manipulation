@@ -16,15 +16,16 @@ import src.recordclip as recordclip
 
 def main():
     filename = 'example2.wav'
+    #filename = 'guitar_c3.wav'
     foldername = os.path.join(os.getcwd(),'assets')
     filename = os.path.join(foldername,filename)
 
     
-    plotclip.plotclip_all(filename)
-    plotclip.plotclip_all_fft(filename)
-    plotclip.spectrogram_all(filename)
+    #plotclip.plotclip_all(filename)
+    #plotclip.plotclip_all_fft(filename)
+    #plotclip.spectrogram_all(filename)
     #plotclip.plotclip_animate_waveform(filename, False, fps=30)
-    plotclip.plotclip_animate_waveform(filename, True, fps=6)
+    #plotclip.plotclip_animate_waveform(filename, True, fps=6)
     plotclip.plotclip_animate_fft(filename, True, fps=6)
 
     #listenclip.listen2Music(filename)

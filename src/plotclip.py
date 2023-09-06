@@ -25,9 +25,11 @@ def plotclip_all(filename):
     wf_raw = np.frombuffer(wf_raw, "int16")
     #print(sample_rate/30)
 
-    if sample_channel == 2:
-        print("Stereo not supported")
-        return
+    if sample_channel > 1:
+        wf_raw = wf_raw[::sample_channel]
+        #wf_raw = wf_raw[1::2]
+        #print("Stereo not supported")
+        #return
 
     time = np.linspace(0,len(wf_raw)/sample_rate, num = len(wf_raw))
     plot.plot(time,wf_raw, color = "blue")
@@ -43,11 +45,18 @@ def spectrogram_all(filename):
     
     wf_raw = wf.readframes(-1)
     wf_raw = np.frombuffer(wf_raw, "int16")
+    #print(wf_raw)
+
+    #print(wf_raw.shape)
     
+    if sample_channel > 1:
+        wf_raw = wf_raw[::sample_channel]
+    """
     if sample_channel == 2:
         print("Stereo not supported")
         return
-
+    """
+    
     time = np.linspace(0,len(wf_raw)/sample_rate, num = len(wf_raw))
     plot.specgram(wf_raw, Fs = sample_rate, vmin = -20, vmax = 50)
     plot.colorbar()
@@ -68,11 +77,13 @@ def plotclip_all_fft(filename):
     #print(wf_raw)
     
     #print(sample_rate/30)
-
+    if sample_channel > 1:
+        wf_raw = wf_raw[::sample_channel]
+    """
     if sample_channel == 2:
         print("Stereo not supported")
         return
-
+    """
     time = np.linspace(0,len(wf_raw)/sample_rate, num = len(wf_raw))
     #print(len(wf_raw)/sample_rate)
     #print(np.size(time))
@@ -111,8 +122,12 @@ def plotclip_animate_waveform(filename, play_music = False, fps = 30):
     def animate(i):
         x = np.linspace(0, sample_size-1, sample_size)
         wf_raw = wf.readframes(sample_size)
+
+        
         #print(i)
         y = np.frombuffer(wf_raw, "int16")
+        if sample_channel > 1:
+            y = y[::sample_channel]
         if play_music:
             stream.write(wf_raw)
         #print(y)
@@ -147,7 +162,7 @@ def plotclip_animate_fft(filename, play_music = False, fps = 30):
     #print(num_frames, sample_rate)
 
     fig = plot.figure()
-    ax = plot.axes(xlim = (0, sample_rate/2), ylim = (0,3*10**6))
+    ax = plot.axes(xlim = (0, sample_rate/2), ylim = (0,10**7))
     line, = ax.plot([],[],lw=2)
 
     def init():
@@ -159,12 +174,24 @@ def plotclip_animate_fft(filename, play_music = False, fps = 30):
         wf_raw = wf.readframes(sample_size)
         #print(i)
         wf_buf = np.frombuffer(wf_raw, "int16")
-        fft_spectrum = np.fft.rfft(wf_buf)
-        x = np.fft.rfftfreq(wf_buf.size, d = 1./sample_rate)
+        
+        if sample_channel > 1:
+            wf_buf = wf_buf[::sample_channel]
+        
+        fft_spectrum = np.fft.fft(wf_buf)
+        x = np.fft.fftfreq(wf_buf.size, d = 1./sample_rate)
         y = np.abs(fft_spectrum)
+        #inverst_fft = np.rint(np.fft.ifft(fft_spectrum)).astype(int)
+        
+        #print(wf_buf)
+        #print(inverst_fft)
+
+        #inverst_fft = inverst_fft.tobytes()
+        
         if play_music:
             stream.write(wf_raw)
-        #print(y)
+            #stream.write(inverst_fft)
+        #print(np.shape(y))
         line.set_data(x,y)
         
         return line,
