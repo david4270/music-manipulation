@@ -177,3 +177,8 @@ def plotclip_animate_fft(filename, play_music = False, fps = 30):
         print("finished")
         stream.close()
         p.terminate()
+
+#further idea - how about adding bunch of filters?
+
+# visualisation idea
+# https://www.youtube.com/watch?v=5LfD-hxbX0E&ab_channel=OutofScope
