@@ -182,3 +182,6 @@ def plotclip_animate_fft(filename, play_music = False, fps = 30):
 
 # visualisation idea
 # https://www.youtube.com/watch?v=5LfD-hxbX0E&ab_channel=OutofScope
+
+
+# https://www.youtube.com/watch?v=MavAU3adGk4&ab_channel=Mr.PSolver
