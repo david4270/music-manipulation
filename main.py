@@ -20,9 +20,9 @@ def main():
     filename = os.path.join(foldername,filename)
 
     
-    #plotclip.plotclip_all(filename)
-    #plotclip.plotclip_all_fft(filename)
-    #plotclip.spectrogram_all(filename)
+    plotclip.plotclip_all(filename)
+    plotclip.plotclip_all_fft(filename)
+    plotclip.spectrogram_all(filename)
     plotclip.plotclip_animated_test(filename)
 
     #listenclip.listen2Music(filename)

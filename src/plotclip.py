@@ -81,9 +81,10 @@ def plotclip_all_fft(filename):
 # animate clip waveform?
 def plotclip_animated_test(filename):
     wf = wave.open(filename, 'rb')
-    sample_size = 735
+    
     sample_channel = wf.getnchannels()
     sample_rate = wf.getframerate()
+    sample_size = int(sample_rate/30)
 
     fig = plot.figure()
     ax = plot.axes(xlim = (0, sample_size), ylim = (-2**15,2**15))
@@ -96,13 +97,19 @@ def plotclip_animated_test(filename):
     def animate(i):
         x = np.linspace(0, sample_size-1, sample_size)
         wf_raw = wf.readframes(sample_size)
+        """
+        if len(wf_raw) == 0:
+            line.set_data(x,np.empty(len(x)))
+            return line,
+        """
+        #print(i)
         y = np.frombuffer(wf_raw, "int16")
         #print(y)
         line.set_data(x,y)
+        
         return line,
 
-    anim = animation.FuncAnimation(fig, animate, init_func=init, interval=1000/30, blit=True)
-    #anim.save('basic_animation.mp4',fps=30)
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=1800, interval=1000/30, repeat = False, blit=True)
 
     """
     fig, ax = plot.subplots()
@@ -130,7 +137,7 @@ def plotclip_animated_test(filename):
 
         wf_raw = wf.readframes(sample_size)
     """
-    plot.show()
+    #plot.show()
         
 
     
