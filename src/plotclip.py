@@ -85,15 +85,19 @@ def plotclip_all_fft(filename):
     plot.show()
 
 # animate clip waveform?
-def plotclip_animated(filename):
+def plotclip_animate_waveform(filename, play_music = False, fps = 30):
     wf = wave.open(filename, 'rb')
+    p = pyaudio.PyAudio()
     
+    sample_width = wf.getsampwidth()
     num_frames = wf.getnframes()
     sample_channel = wf.getnchannels()
     sample_rate = wf.getframerate()
-    frames_per_second = 30
+    frames_per_second = fps  # can use 30 - for playing music smoothly, use 6 
     sample_size = int(sample_rate/frames_per_second)
 
+    if play_music:
+        stream = p.open(format = p.get_format_from_width(sample_width), channels=sample_channel, rate = sample_rate, output = True)
     #print(num_frames, sample_rate)
 
     fig = plot.figure()
@@ -109,6 +113,8 @@ def plotclip_animated(filename):
         wf_raw = wf.readframes(sample_size)
         #print(i)
         y = np.frombuffer(wf_raw, "int16")
+        if play_music:
+            stream.write(wf_raw)
         #print(y)
         line.set_data(x,y)
         
@@ -117,6 +123,57 @@ def plotclip_animated(filename):
     anim = animation.FuncAnimation(fig, animate, init_func=init, frames=int(num_frames/sample_size), interval=1000/frames_per_second, repeat = False, blit=True)
 
     plot.show()
+
+    if play_music:
+        print("finished")
+        stream.close()
+        p.terminate()
         
 
+# animate fft
+def plotclip_animate_fft(filename, play_music = False, fps = 30):
+    wf = wave.open(filename, 'rb')
+    p = pyaudio.PyAudio()
     
+    sample_width = wf.getsampwidth()
+    num_frames = wf.getnframes()
+    sample_channel = wf.getnchannels()
+    sample_rate = wf.getframerate()
+    frames_per_second = fps  # can use 30 - for playing music smoothly, use 6 
+    sample_size = int(sample_rate/frames_per_second)
+
+    if play_music:
+        stream = p.open(format = p.get_format_from_width(sample_width), channels=sample_channel, rate = sample_rate, output = True)
+    #print(num_frames, sample_rate)
+
+    fig = plot.figure()
+    ax = plot.axes(xlim = (0, sample_rate/2), ylim = (0,3*10**6))
+    line, = ax.plot([],[],lw=2)
+
+    def init():
+        line.set_data([],[])
+        return line,
+
+    def animate(i):
+        #x = np.linspace(0, sample_size-1, sample_size)
+        wf_raw = wf.readframes(sample_size)
+        #print(i)
+        wf_buf = np.frombuffer(wf_raw, "int16")
+        fft_spectrum = np.fft.rfft(wf_buf)
+        x = np.fft.rfftfreq(wf_buf.size, d = 1./sample_rate)
+        y = np.abs(fft_spectrum)
+        if play_music:
+            stream.write(wf_raw)
+        #print(y)
+        line.set_data(x,y)
+        
+        return line,
+
+    anim = animation.FuncAnimation(fig, animate, init_func=init, frames=int(num_frames/sample_size), interval=1000/frames_per_second, repeat = False, blit=True)
+
+    plot.show()
+
+    if play_music:
+        print("finished")
+        stream.close()
+        p.terminate()
