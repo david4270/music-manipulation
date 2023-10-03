@@ -5,6 +5,7 @@ import os
 import matplotlib.pyplot as plot
 import matplotlib.animation as animation
 import numpy as np
+import math
 
 # To-do
 # - Animated waveform
@@ -157,12 +158,16 @@ def plotclip_animate_fft(filename, play_music = False, fps = 30):
     frames_per_second = fps  # can use 30 - for playing music smoothly, use 6 
     sample_size = int(sample_rate/frames_per_second)
 
+    #print(wf.getparams(), sample_size)
+
     if play_music:
         stream = p.open(format = p.get_format_from_width(sample_width), channels=sample_channel, rate = sample_rate, output = True)
     #print(num_frames, sample_rate)
 
     fig = plot.figure()
-    ax = plot.axes(xlim = (0, sample_rate/2), ylim = (0,10**7))
+    #ax = plot.axes(xlim = (0, sample_rate/2), ylim = (0,140))
+    ax = plot.axes(xlim = (0, sample_rate/2), ylim = (0,2**21))
+    #ax = plot.axes(xlim = (0, 800), ylim = (0,10**7))
     line, = ax.plot([],[],lw=2)
 
     def init():
@@ -174,23 +179,33 @@ def plotclip_animate_fft(filename, play_music = False, fps = 30):
         wf_raw = wf.readframes(sample_size)
         #print(i)
         wf_buf = np.frombuffer(wf_raw, "int16")
+        #print(wf_buf)
         
         if sample_channel > 1:
             wf_buf = wf_buf[::sample_channel]
         
         fft_spectrum = np.fft.fft(wf_buf)
         x = np.fft.fftfreq(wf_buf.size, d = 1./sample_rate)
-        y = np.abs(fft_spectrum)
-        #inverst_fft = np.rint(np.fft.ifft(fft_spectrum)).astype(int)
+        #print(sample_rate/frames_per_second)
+        #np.set_printoptions(threshold=sys.maxsize)
+        y = abs(fft_spectrum)
+        #y = 20*np.log(abs(fft_spectrum))/math.log(10) # decibels
+
+        # test code - get k maximum frequencies
+        #ind = np.argpartition(y[:len(y)//2], -10)[-10:]
+        #print(x[ind])
+        #print(20*np.log(y[ind])/math.log(10))
+        #print(y)
+        #inverse_fft = np.rint(np.fft.ifft(fft_spectrum)).astype(int)
         
         #print(wf_buf)
-        #print(inverst_fft)
+        #print(inverse_fft)
 
-        #inverst_fft = inverst_fft.tobytes()
+        #inverse_fft = inverse_fft.tobytes()
         
         if play_music:
             stream.write(wf_raw)
-            #stream.write(inverst_fft)
+            #stream.write(inverse_fft)
         #print(np.shape(y))
         line.set_data(x,y)
         
