@@ -41,7 +41,8 @@ def main():
 
     #manipulateclip.test(filename)
     manipulateclip.pitchShifter(filename, 12)
-    manipulateclip.timeStretcher(filename, 2)
+    manipulateclip.timeStretcher(filename, 0.5)
+    manipulateclip.phaseVocoder(filename, 0.5)
 
 if __name__ == '__main__':
     main()
