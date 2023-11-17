@@ -39,9 +39,9 @@ def main():
 
     #recordclip.livestream_voice()
 
-    manipulateclip.test(filename)
-    #manipulateclip.changePitch(filename, 2)
-
+    #manipulateclip.test(filename)
+    manipulateclip.pitchShifter(filename, 12)
+    manipulateclip.timeStretcher(filename, 2)
 
 if __name__ == '__main__':
     main()
