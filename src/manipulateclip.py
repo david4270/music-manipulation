@@ -75,6 +75,8 @@ def timeStretcher(filename, stretch_factor = 1.0):
     wf.writeframes(shifted_data.tobytes())
     wf.close()
 
+
+
 def phaseVocoder(filename, rate):
     wf = wave.open(filename, 'rb')
     params = wf.getparams()
